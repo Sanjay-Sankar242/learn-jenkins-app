@@ -20,5 +20,28 @@ pipeline {
                         '''
                 }
         }
+        stage('Test') {
+                environment{
+                    FILE_PATH = "build/index.html"
+                }
+                agent{
+                    docker{
+                        image 'node:18-alpine'
+                        reuseNode true
+                    }
+                }
+                steps {
+                        sh '''
+                        if [ -f "$FILE_PATH" ]; then
+                            echo "Success: The file exists."
+                        else
+                            echo "Error: The file is missing."
+                            exit 1
+                        fi
+                        npm test
+                        '''
+                }
     }
+}
+
 }
