@@ -39,8 +39,9 @@ pipeline {
                             echo "Error: The file is missing."
                             exit 1
                         fi}
-                        npm test
+                        
                         '''*/
+                        sh'npm test'
                 }
     }
         stage('E2E') {
@@ -53,7 +54,8 @@ pipeline {
                 steps {
                         sh '''
                         npm install -g serve
-                        npm_modules/.bin/serve -s build
+                        npm_modules/.bin/serve -s build &
+                        sleep 10
                         npx playwright test
                         '''
                 }
@@ -61,7 +63,7 @@ pipeline {
 }
     post{
         always{
-            junit 'test-results/juint.xml'
+            junit 'jest-results/juint.xml'
         }
     }
 
